@@ -3,9 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import type { Courses } from "@/db/schema";
 
 interface UserProgressProps {
-  activeCourse: any;
+  activeCourse: Courses;
   hearts: number;
   points: number;
   hasActiveSubscription: boolean;
@@ -39,7 +40,11 @@ const UserProgress = ({
       <Button asChild variant="ghost" className="text-rose-500">
         <Link href="/shop">
           <Image src="/heart.svg" alt="Hearts" width={28} height={28} />
-          {hasActiveSubscription ? <InfinityIcon className="stroke-3" /> : hearts}
+          {hasActiveSubscription ? (
+            <InfinityIcon className="stroke-3" />
+          ) : (
+            hearts
+          )}
         </Link>
       </Button>
     </div>
