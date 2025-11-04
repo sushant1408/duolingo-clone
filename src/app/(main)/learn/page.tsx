@@ -24,7 +24,7 @@ export default async function LearnPage() {
         />
       </StickyWrapper>
       <FeedWrapper>
-        <Header title="Spanish" />
+        <Header title={userProgress.activeCourse.title} />
       </FeedWrapper>
     </div>
   );
