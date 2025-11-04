@@ -33,7 +33,7 @@ const upsertUserProgress = async (courseId: Courses["id"]) => {
     await db.update(userProgress).set({
       activeCourseId: courseId,
       userName: user.firstName || "User",
-      userUmageSrc: user.imageUrl || "/mascot.svg",
+      userImageSrc: user.imageUrl || "/mascot.svg",
     });
 
     revalidatePath("/courses");
@@ -45,7 +45,7 @@ const upsertUserProgress = async (courseId: Courses["id"]) => {
     userId,
     activeCourseId: courseId,
     userName: user.firstName || "User",
-    userUmageSrc: user.imageUrl || "/mascot.svg",
+    userImageSrc: user.imageUrl || "/mascot.svg",
   });
 
   revalidatePath("/courses");
