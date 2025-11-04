@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 
+import { Toaster } from "@/components/ui/sonner";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -34,7 +35,10 @@ export default function RootLayout({
   return (
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
-        <body className={`${nunito.className} antialiased`}>{children}</body>
+        <body className={`${nunito.className} antialiased`}>
+          <Toaster />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

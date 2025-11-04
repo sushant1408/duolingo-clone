@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import type { Courses } from "@/db/schema";
+import type { Courses, UserProgress as DB_UserProgress } from "@/db/schema";
 
 interface UserProgressProps {
   activeCourse: Courses;
-  hearts: number;
-  points: number;
+  hearts: DB_UserProgress["hearts"];
+  points: DB_UserProgress["points"];
   hasActiveSubscription: boolean;
 }
 
