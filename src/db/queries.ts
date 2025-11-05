@@ -4,7 +4,7 @@ import { cache } from "react";
 
 import { db } from "@/db/drizzle";
 import type { Courses } from "@/db/schema";
-import { courses, units, userProgress } from "@/db/schema";
+import { challengeProgress, courses, units, userProgress } from "@/db/schema";
 
 const getCourses = cache(async () => {
   const data = await db.query.courses.findMany();
@@ -37,9 +37,10 @@ const getCourseById = cache(async (courseId: Courses["id"]) => {
 });
 
 const getUnits = cache(async () => {
+  const { userId } = await auth();
   const userProgress = await getUserProgress();
 
-  if (!userProgress?.activeCourseId) {
+  if (!userId || !userProgress?.activeCourseId) {
     return [];
   }
 
@@ -50,7 +51,9 @@ const getUnits = cache(async () => {
         with: {
           challenges: {
             with: {
-              challengeProgress: true,
+              challengeProgress: {
+                where: eq(challengeProgress.userId, userId),
+              },
             },
           },
         },
@@ -83,4 +86,4 @@ const getUnits = cache(async () => {
   return normalizedData;
 });
 
-export { getCourses, getCourseById, getUserProgress, getUnits };
+export { getCourseById, getCourses, getUnits, getUserProgress };
