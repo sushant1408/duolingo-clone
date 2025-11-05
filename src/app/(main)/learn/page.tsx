@@ -4,10 +4,16 @@ import { Header } from "@/app/(main)/learn/_components/header";
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { StickyWrapper } from "@/components/sticky-wrapper";
 import { UserProgress } from "@/components/user-progress";
-import { getUserProgress } from "@/db/queries";
+import { getUnits, getUserProgress } from "@/db/queries";
 
 export default async function LearnPage() {
-  const userProgress = await getUserProgress();
+  const userProgressPromise = getUserProgress();
+  const unitsPromise = getUnits();
+
+  const [userProgress, units] = await Promise.all([
+    userProgressPromise,
+    unitsPromise,
+  ]);
 
   if (!userProgress || !userProgress.activeCourse) {
     redirect("/courses");
@@ -25,6 +31,13 @@ export default async function LearnPage() {
       </StickyWrapper>
       <FeedWrapper>
         <Header title={userProgress.activeCourse.title} />
+        {units.map((unit) => (
+          <div key={unit.id} className="mb-10">
+            <pre>
+              <code>{JSON.stringify(unit, null, 2)}</code>
+            </pre>
+          </div>
+        ))}
       </FeedWrapper>
     </div>
   );
