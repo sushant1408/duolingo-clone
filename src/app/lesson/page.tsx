@@ -24,7 +24,7 @@ export default async function LessonPage() {
   return (
     <Quiz
       initialLessonId={lesson.id}
-      lessonChallenges={lesson.challenges}
+      initialLessonChallenges={lesson.challenges}
       initialHearts={userProgress.hearts}
       initialPercentage={initialPercentage}
       userSubscription={null}
