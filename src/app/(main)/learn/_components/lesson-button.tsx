@@ -91,7 +91,7 @@ const LessonButton = ({
                     "size-10",
                     locked
                       ? "fill-neutral-400 text-neutral-400 stroke-neutral-400"
-                      : "fill-primary-foreground text-popover-foreground",
+                      : "fill-primary-foreground text-primary-foreground",
                     isCompleted && "fill-none stroke-4"
                   )}
                 />
