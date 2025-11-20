@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { Challenge } from "@/app/lesson/_components/challenge";
+import { Footer } from "@/app/lesson/_components/footer";
 import { Header } from "@/app/lesson/_components/header";
 import { QuestionBubble } from "@/app/lesson/_components/question-bubble";
 import type {
@@ -10,7 +12,6 @@ import type {
   Lessons,
   UserProgress,
 } from "@/db/schema";
-import { Challenge } from "./challenge";
 
 interface QuizProps {
   initialLessonId: Lessons["id"];
@@ -39,6 +40,9 @@ const Quiz = ({
     );
     return uncompletedIndex === -1 ? 0 : uncompletedIndex;
   });
+  const [status, setStatus] = useState<"correct" | "wrong" | "none">("none");
+  const [selectedOption, setSelectedOption] =
+    useState<ChallengeOptions["id"]>();
 
   const challenge = challenges[activeIndex];
   const options = challenge?.challengeOptions || [];
@@ -47,6 +51,14 @@ const Quiz = ({
     challenge.type === "ASSIST"
       ? "Select the correct meaning"
       : challenge.question;
+
+  const onSelect = (id: ChallengeOptions["id"]) => {
+    if (status !== "none") {
+      return;
+    }
+
+    setSelectedOption(id);
+  };
 
   return (
     <>
@@ -67,9 +79,9 @@ const Quiz = ({
               )}
               <Challenge
                 options={options}
-                onSelect={() => {}}
-                status="none"
-                selectedOption={undefined}
+                onSelect={onSelect}
+                status={status}
+                selectedOption={selectedOption}
                 disabled={false}
                 type={challenge.type}
               />
@@ -77,6 +89,8 @@ const Quiz = ({
           </div>
         </div>
       </div>
+
+      <Footer disabled={!selectedOption} status={status} onCheck={() => {}} />
     </>
   );
 };
