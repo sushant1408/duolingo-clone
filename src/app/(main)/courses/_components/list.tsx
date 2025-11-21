@@ -27,9 +27,7 @@ const List = ({ activeCourseId, courses }: ListProps) => {
     }
 
     startTransition(() => {
-      upsertUserProgress(id).catch(() => {
-        toast.error("Something went wrong.");
-      });
+      upsertUserProgress(id).catch(() => toast.error("Something went wrong."));
     });
   };
 
