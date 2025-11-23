@@ -40,8 +40,14 @@ const Footer = ({ disabled, lessonId, onCheck, status }: FooterProps) => {
           </div>
         )}
         {status === "completed" && (
-          <Button variant="default" size={isMobile ? "sm" : "lg"} asChild>
-            <Link href={`/lesson/${lessonId}`}>Practice again</Link>
+          <Button
+            variant="default"
+            size={isMobile ? "sm" : "lg"}
+            onClick={() => {
+              window.location.href = `/lesson/${lessonId}`;
+            }}
+          >
+            Practice again
           </Button>
         )}
         <Button
