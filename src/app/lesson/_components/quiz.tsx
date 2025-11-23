@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import Confetti from "react-confetti";
-import { useAudio, useWindowSize } from "react-use";
+import { useAudio, useWindowSize, useMount } from "react-use";
 import { toast } from "sonner";
 
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
@@ -21,6 +21,8 @@ import type {
   Lessons,
   UserProgress,
 } from "@/db/schema";
+import { useHeartsModal } from "@/store/use-hearts-modal";
+import { usePracticeModal } from "@/store/use-practice-modal";
 
 interface QuizProps {
   initialLessonId: Lessons["id"];
@@ -40,6 +42,15 @@ const Quiz = ({
   initialLessonChallenges,
   userSubscription,
 }: QuizProps) => {
+  const { open: openHeartsModal } = useHeartsModal();
+  const { open: openPracticeModal } = usePracticeModal();
+
+  useMount(() => {
+    if (initialPercentage === 100) {
+      openPracticeModal();
+    }
+  });
+
   const { width, height } = useWindowSize();
 
   const router = useRouter();
@@ -57,7 +68,9 @@ const Quiz = ({
   });
 
   const [hearts, setHearts] = useState(initialHearts);
-  const [percentage, setPercentage] = useState(initialPercentage);
+  const [percentage, setPercentage] = useState(() => {
+    return initialPercentage === 100 ? 0 : initialPercentage;
+  });
   const [lessonId] = useState(initialLessonId);
   const [challenges] = useState(initialLessonChallenges);
   const [activeIndex, setActiveIndex] = useState(() => {
@@ -162,6 +175,7 @@ const Quiz = ({
         upsertChallengeProgress(challenge.id)
           .then((response) => {
             if (response?.error === "hearts") {
+              openHeartsModal();
               return;
             }
 
@@ -180,6 +194,7 @@ const Quiz = ({
       reduceHearts(challenge.id)
         .then((response) => {
           if (response?.error === "hearts") {
+            openHeartsModal();
             return;
           }
 
