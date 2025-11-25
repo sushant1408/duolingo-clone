@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { Quiz } from "@/app/lesson/_components/quiz";
-import { getLesson, getUserProgress } from "@/db/queries";
+import { getLesson, getUserProgress, getUserSubscription } from "@/db/queries";
 
 interface LessonIdPageProps {
   params: Promise<{
@@ -14,10 +14,12 @@ export default async function LessonIdPage({ params }: LessonIdPageProps) {
 
   const lessonPromise = getLesson(parseInt(lessonId, 10));
   const userProgressPromise = getUserProgress();
+  const userSubscriptionPromise = getUserSubscription();
 
-  const [lesson, userProgress] = await Promise.all([
+  const [lesson, userProgress, userSubscription] = await Promise.all([
     lessonPromise,
     userProgressPromise,
+    userSubscriptionPromise,
   ]);
 
   if (!lesson || !userProgress) {
@@ -35,7 +37,7 @@ export default async function LessonIdPage({ params }: LessonIdPageProps) {
       initialLessonChallenges={lesson.challenges}
       initialHearts={userProgress.hearts}
       initialPercentage={initialPercentage}
-      userSubscription={null}
+      userSubscription={userSubscription}
     />
   );
 }
