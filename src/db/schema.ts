@@ -6,6 +6,7 @@ import {
   pgTable,
   serial,
   text,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 import { MAX_HEARTS } from "@/config/constants";
@@ -145,6 +146,15 @@ export const userProgressRelation = relations(userProgress, ({ one }) => ({
   }),
 }));
 
+export const userSubscription = pgTable("user_subscription", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().unique(),
+  stripeCustomerId: text("stripe_customer_id").notNull().unique(),
+  stripeSubscriptionId: text("stripe_subscription_id").notNull().unique(),
+  stripePriceId: text("stripe_price_id").notNull(),
+  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end").notNull(),
+});
+
 export type Courses = typeof courses.$inferSelect;
 export type Units = typeof units.$inferSelect;
 export type Lessons = typeof lessons.$inferSelect;
@@ -152,3 +162,4 @@ export type Challenges = typeof challenges.$inferSelect;
 export type ChallengeOptions = typeof challengeOptions.$inferSelect;
 export type ChallengeProgress = typeof challengeProgress.$inferSelect;
 export type UserProgress = typeof userProgress.$inferSelect;
+export type UserSubscription = typeof userSubscription.$inferSelect;
