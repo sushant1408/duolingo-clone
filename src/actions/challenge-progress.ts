@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 import { MAX_HEARTS } from "@/config/constants";
 import { db } from "@/db/drizzle";
-import { getUserProgress } from "@/db/queries";
+import { getUserProgress, getUserSubscription } from "@/db/queries";
 import type { ChallengeOptions } from "@/db/schema";
 import { challengeProgress, challenges, userProgress } from "@/db/schema";
 
@@ -18,6 +18,7 @@ const upsertChallengeProgress = async (challengeId: ChallengeOptions["id"]) => {
   }
 
   const currentUserProgress = await getUserProgress();
+  const userSubscription = await getUserSubscription();
 
   if (!currentUserProgress) {
     throw new Error("User progress not found");
@@ -42,7 +43,11 @@ const upsertChallengeProgress = async (challengeId: ChallengeOptions["id"]) => {
 
   const isPractice = !!existingChallengeProgress;
 
-  if (currentUserProgress.hearts === 0 && !isPractice) {
+  if (
+    currentUserProgress.hearts === 0 &&
+    !isPractice &&
+    !userSubscription?.isActive
+  ) {
     return { error: "hearts" };
   }
 
