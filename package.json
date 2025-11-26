@@ -11,8 +11,7 @@
     "db:studio": "npx drizzle-kit studio",
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate",
-    "db:push": "npx drizzle-kit push",
-    "db:seed": "tsx ./src/scripts/seed.ts"
+    "db:push": "npx drizzle-kit push"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.34.1",
