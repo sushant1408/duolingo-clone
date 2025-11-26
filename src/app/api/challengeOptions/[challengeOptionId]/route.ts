@@ -7,15 +7,17 @@ import { getIsAdmin } from "@/lib/admin";
 
 export const GET = async (
   _req: Request,
-  { params }: { params: { challengeOptionId: number } }
+  { params }: { params: Promise<{ challengeOptionId: string }> }
 ) => {
   const isAdmin = await getIsAdmin();
   if (!isAdmin) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
+  const { challengeOptionId } = await params;
+
   const data = await db.query.challengeOptions.findFirst({
-    where: eq(challengeOptions.id, params.challengeOptionId),
+    where: eq(challengeOptions.id, challengeOptionId as unknown as number),
   });
 
   return NextResponse.json(data);
@@ -23,12 +25,14 @@ export const GET = async (
 
 export const PUT = async (
   req: Request,
-  { params }: { params: { challengeOptionId: number } }
+  { params }: { params: Promise<{ challengeOptionId: string }> }
 ) => {
   const isAdmin = await getIsAdmin();
   if (!isAdmin) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
+
+  const { challengeOptionId } = await params;
 
   const body = await req.json();
   const data = await db
@@ -36,7 +40,7 @@ export const PUT = async (
     .set({
       ...body,
     })
-    .where(eq(challengeOptions.id, params.challengeOptionId))
+    .where(eq(challengeOptions.id, challengeOptionId as unknown as number))
     .returning();
 
   return NextResponse.json(data[0]);
@@ -44,16 +48,18 @@ export const PUT = async (
 
 export const DELETE = async (
   _req: Request,
-  { params }: { params: { challengeOptionId: number } }
+  { params }: { params: Promise<{ challengeOptionId: string }> }
 ) => {
   const isAdmin = await getIsAdmin();
   if (!isAdmin) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
+  const { challengeOptionId } = await params;
+
   const data = await db
     .delete(challengeOptions)
-    .where(eq(challengeOptions.id, params.challengeOptionId))
+    .where(eq(challengeOptions.id, challengeOptionId as unknown as number))
     .returning();
 
   return NextResponse.json(data[0]);
